@@ -10,6 +10,18 @@ class UserService {
         })
         return response
     }
+    async logout() {
+        const response = await api.post(`/user/logout`, {}, { headers: AuthHeader() })
+        return response
+    }
+    async create(username, email, password) {
+        const response = await api.post(`/user`, {
+            username: username,
+            email: email,
+            password: password
+        })
+        return response
+    }
 
 }
 

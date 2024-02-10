@@ -31,6 +31,16 @@ module.exports = (sequelize, DataTypes) => {
     {
       timestamps: true,
       freezeTableName: true,
+      hooks : {
+        afterCreate : async (user, options) => {
+          const List = sequelize.models.List
+          await List.create({
+            creator: user.id,
+            title: "Votre liste",
+            mainList: true,
+          })
+        }
+      }
     },
   )
 }

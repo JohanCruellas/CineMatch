@@ -15,7 +15,7 @@ app.use(bodyParser.json({
 
 db.sync({
     alter: true,
-    force: false
+    force: true
 }).then(async () => {
     initUtils.initialize(db);
 })

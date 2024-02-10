@@ -1,2 +1,4 @@
 ﻿app/.vscode
 api/node_modules
+api/.env
+app/.env

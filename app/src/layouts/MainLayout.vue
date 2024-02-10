@@ -1,116 +1,78 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+  <q-layout view="lHh lpR lFf">
+
+    <q-header bordered class="bg-primary text-white">
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+          <q-toolbar-title>
+            <h1>CineMatch</h1>
+          </q-toolbar-title>
+        <q-space />
+        <q-btn dense flat round icon="tune" />
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" elevated>
       <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+        <q-item>
+          <q-avatar size="md">
+            <img src="https://cdn.quasar.dev/logo-v2/svg/logo.svg">
+          </q-avatar>
+        </q-item>
+        <q-item clickable v-ripple>
+          <q-item-section>
+            <q-item-label>Profil</q-item-label>
+          </q-item-section>
+        </q-item>
       </q-list>
+      <!-- drawer content -->
     </q-drawer>
 
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <q-footer elevated class="text-white">
+      <q-toolbar class="tabToolbar">
+        <q-tabs v-model="tab" shrink>
+          <q-tab name="match"><q-icon name="favorite" size="sm"></q-icon></q-tab>
+          <q-tab name="search"><q-icon name="search" size="sm"></q-icon></q-tab>
+          <q-tab name="lists"><q-icon name="list_alt" size="sm"></q-icon></q-tab>
+        </q-tabs>
+      </q-toolbar>
+    </q-footer>
   </q-layout>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
+import { ref } from 'vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'MainLayout',
-
-  components: {
-    EssentialLink
-  },
-
-  setup () {
-    const leftDrawerOpen = ref(false)
-
+  data() {
     return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
+      leftDrawerOpen: false,
+      tab: 'match'
+    }
+  },
+  methods: {
+    toggleLeftDrawer() {
+      this.leftDrawerOpen = !this.leftDrawerOpen
     }
   }
 })
 </script>
+
+<style lang="scss" scoped>
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 2rem;
+
+}
+.tabToolbar {
+  display: flex;
+  justify-content: center;
+}
+</style>

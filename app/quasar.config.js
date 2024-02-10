@@ -13,6 +13,7 @@ const { configure } = require('quasar/wrappers');
 const path = require('path');
 
 module.exports = configure(function (/* ctx */) {
+  require('dotenv').config()
   return {
     eslint: {
       // fix: true,
@@ -32,6 +33,7 @@ module.exports = configure(function (/* ctx */) {
     boot: [
       'i18n',
       'axios',
+      'global',
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -65,6 +67,10 @@ module.exports = configure(function (/* ctx */) {
       // vueDevtools,
       // vueOptionsAPI: false,
 
+      env: {
+        APP_URL: process.env.APP_URL,
+        API_URL: process.env.API_URL,
+      },
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
       // publicPath: '/',
@@ -115,7 +121,10 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'Dialog',
+        'Notify',
+      ]
     },
 
     // animations: 'all', // --- includes all animations
