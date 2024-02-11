@@ -1,14 +1,15 @@
 <template>
   <q-layout view="lHh lpR lFf">
-
     <q-header bordered class="bg-primary text-white">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-          <q-toolbar-title>
-            <h1>CineMatch</h1>
-          </q-toolbar-title>
+        <q-toolbar-title>
+          <h1>CineMatch</h1>
+        </q-toolbar-title>
         <q-space />
-        <q-btn dense flat round icon="tune" />
+        <q-btn dense flat round icon="tune" v-if="$route.name === 'Index'" @click="openFiltersModal()">
+          <q-badge color="red" floating>{{ numberOfAppliedFilters }}</q-badge>
+        </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -28,7 +29,7 @@
       <!-- drawer content -->
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="pageContainer">
       <router-view />
     </q-page-container>
 
@@ -47,6 +48,8 @@
 <script>
 import { ref } from 'vue'
 import { defineComponent } from 'vue'
+import FiltersModal from '../components/FiltersModal.vue'
+import mediaService from 'src/services/media.service'
 
 export default defineComponent({
   data() {
@@ -58,7 +61,29 @@ export default defineComponent({
   methods: {
     toggleLeftDrawer() {
       this.leftDrawerOpen = !this.leftDrawerOpen
+    },
+    openFiltersModal() {
+      this.$q.dialog({
+        component: FiltersModal,
+        parent: this,
+      })
     }
+  },
+  computed: {
+    numberOfAppliedFilters() {
+      const filters = this.$store.filters;
+      return Object.values(filters).filter(value => {
+        if (Array.isArray(value)) {
+          return value.length > 0;
+        } else {
+          return value !== null;
+        }
+      }).length;
+    }
+  },
+  async mounted() {
+    const response = await mediaService.genres();
+    this.$store.genres = response.data.genres;
   }
 })
 </script>
@@ -71,8 +96,13 @@ h1 {
   line-height: 2rem;
 
 }
+
 .tabToolbar {
   display: flex;
   justify-content: center;
+}
+
+.pageContainer {
+  background-color: $bgDark;
 }
 </style>

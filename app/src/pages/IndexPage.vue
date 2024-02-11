@@ -1,11 +1,18 @@
 <template>
     <q-page>
+        <div v-if="showLeftIndicator" class="indicator leftIndicator">
+            <q-icon name="close" size="xl" class="indicatorIcon"></q-icon>
+        </div>
+        <div v-if="showRightIndicator" class="indicator rightIndicator">
+            <q-icon name="done" size="xl" class="indicatorIcon"></q-icon>
+        </div>
         <div class="cardStack">
             <MediaCard v-for="(media, mediaIndex) in shownMedias.slice(0, 4).reverse()" :key="media.id" :media="media"
-                :mediaIndex="mediaIndex" @swipe-left="(media) => dislike(media)" @swipe-right="(media) => like(media)">
+                :mediaIndex="mediaIndex" @swipe-left="(media) => dislike(media)" @swipe-right="(media) => like(media)"
+                @move-left="showLeftIndicator = true" @move-right="showRightIndicator = true"
+                @reset-indicators="resetIndicators()">
             </MediaCard>
         </div>
-        <!-- <q-btn @click="test()" label="test" class="loadMoreButton" /> -->
     </q-page>
 </template>
 
@@ -26,6 +33,8 @@ export default defineComponent({
             userLists: [],
             currentList: null,
             page: 1,
+            showRightIndicator: false,
+            showLeftIndicator: false,
         };
     },
     methods: {
@@ -74,8 +83,7 @@ export default defineComponent({
             return gradients[index % gradientCount];
         },
         async discoverMedias() {
-            let response = await mediaService.discover(this.page);
-
+            let response = await mediaService.discover(this.page, this.$store.filters);
             let filteredShownMedias = response.data.results.filter(media => {
                 return !this.currentList.likedMedias.includes(media.id) && !this.currentList.dislikedMedias.includes(media.id);
             });
@@ -87,17 +95,29 @@ export default defineComponent({
                 };
             })];
         },
-
+        resetIndicators() {
+            this.showRightIndicator = false;
+            this.showLeftIndicator = false;
+        }
     },
     computed: {
     },
     watch: {
-        shownMedias : {
+        shownMedias: {
             handler: function (val) {
-                if (val.length < 3) {
+                if (val.length < 4) {
+                    console.log('load more')
                     this.page++;
                     this.discoverMedias();
                 }
+            },
+            deep: true
+        },
+        '$store.filters': {
+            handler: function (val) {
+                this.page = 1;
+                this.shownMedias = [];
+                this.discoverMedias();
             },
             deep: true
         }
@@ -116,8 +136,44 @@ export default defineComponent({
 <style lang="scss" scoped>
 .cardStack {
     min-height: inherit;
-    position: relative;
     display: flex;
     justify-content: center;
+}
+
+.indicator {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    z-index: 99;
+}
+
+.leftIndicator {
+    left: 0;
+}
+
+.rightIndicator {
+    right: 0;
+}
+
+.indicatorIcon {
+    border: 3px solid transparent;
+    border-radius: 50px;
+}
+
+.leftIndicator>.indicatorIcon {
+    font-weight: 700;
+    background: $gradientNegative;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-left: 15px;
+}
+
+.rightIndicator>.indicatorIcon {
+    font-weight: 700;
+    background: $gradientPositive;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-right: 15px;
 }
 </style>
