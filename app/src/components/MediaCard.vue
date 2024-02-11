@@ -1,5 +1,6 @@
 <template>
-    <q-card class="card" ref="draggableCard" >
+    <q-card class="card" ref="draggableCard" :class="inInteraction === false ? 'transitionDelay' : ''">
+        {{ mediaIndex }}
         <q-card-section>
             <q-item>
                 <q-item-section>
@@ -18,9 +19,14 @@ import interact from 'interactjs';
 
 export default defineComponent({
     name: 'MediaCard',
+    emits: ['swipeRight', 'swipeLeft'],
     props: {
         media: {
             type: Object,
+            required: true,
+        },
+        mediaIndex: {
+            type: Number,
             required: true,
         },
     },
@@ -29,7 +35,9 @@ export default defineComponent({
             interactionPosition: {
                 x: 0,
                 y: 0,
-            }
+            },
+            interactionXThreshold: 100,
+            inInteraction: false,
         };
     },
     computed: {
@@ -39,7 +47,7 @@ export default defineComponent({
             const rotationDirection = x < 0 ? -1 : 1;
             const rotationAngle = rotationDirection * (distanceFromOrigin / 30);
             return `translate3D(${x}px, ${y}px, 0) rotate(${rotationAngle}deg)`;
-        }
+        },
     },
     methods: {
         interactSetPosition(coordinates) {
@@ -47,6 +55,7 @@ export default defineComponent({
             this.interactionPosition = { x, y }
         },
         resetCardPosition() {
+            this.inInteraction = false
             this.interactSetPosition({ x: 0, y: 0 })
         },
     },
@@ -55,12 +64,21 @@ export default defineComponent({
         interact(element).draggable({
             // lockAxis: 'x',
             onmove: event => {
+                this.inInteraction = true
                 const x = this.interactionPosition.x + event.dx
                 const y = this.interactionPosition.y + event.dy
                 this.interactSetPosition({ x, y })
                 // console.log(this.transformString)
             },
             onend: () => {
+                const { x } = this.interactionPosition
+                if (x > this.interactionXThreshold) {
+                    console.log('swipe right')
+                    this.$emit('swipeRight', this.media)
+                } else if (x < -this.interactionXThreshold) {
+                    console.log('swipe left', this.media)
+                    this.$emit('swipeLeft', this.media)
+                }
                 this.resetCardPosition()
             }
         })
@@ -72,28 +90,34 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-$gradients: (
-    linear-gradient(45deg, #a6ff00, #28bbff),
-    linear-gradient(45deg, #ffbb00, #a6ff00),
-    linear-gradient(45deg, #ff2478, #ffbb00),
-    linear-gradient(45deg, #28bbff, #ff2478),
-);
+// $gradients: (
+//     linear-gradient(45deg, #a6ff00, #28bbff),
+//     linear-gradient(45deg, #ffbb00, #a6ff00),
+//     linear-gradient(45deg, #ff2478, #ffbb00),
+//     linear-gradient(45deg, #28bbff, #ff2478),
+// );
 
 .card {
+    display: none;
     position: absolute;
     align-self: center;
     height: 500px;
     max-width: 350px;
     border-radius: 35px;
-    transition: background-image 0.5s;
     user-select: none;
     touch-action: none;
+    background-image : v-bind('media.backgroundGradient');
+}
+
+.transitionDelay {
+    transition: transform 0.3s;
 }
 
 @for $i from 0 through 3 {
     .card:nth-child(#{$i + 1}) {
+        display: block;
         transform: translateY($i * -30px) scale(calc(1 + ($i / 20))) v-bind(transformString);
-        background-image: nth($gradients, $i + 1);
+        // background-image: nth($gradients, $i + 1);
     }
 }
 </style>
