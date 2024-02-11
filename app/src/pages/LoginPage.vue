@@ -39,8 +39,6 @@ export default defineComponent({
     async login() {
       let response = await userService.login(this.username, this.password)
       if (response.status === 200) {
-        console.log(this.$axios)
-        console.log(this.$store)
         const { user, token } = response.data
         this.$store.currentUser = user
         LocalStorage.set('token', token)

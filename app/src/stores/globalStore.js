@@ -8,4 +8,5 @@ export const useGlobalStore = defineStore("globalStore", {
   },
   actions: {
   },
+  persist: true,
 })

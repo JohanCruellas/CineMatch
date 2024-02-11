@@ -1,7 +1,6 @@
 const db = require("../models/db.js")
-const { User } = db.models
+const { User, List } = db.models
 const jwt = require('jsonwebtoken')
-
 
 exports.login = async (req, res, next) => {
     try {
@@ -9,7 +8,13 @@ exports.login = async (req, res, next) => {
         let user = await User.findOne({
             where: {
                 username: username
-            }
+            },
+            // include: [
+            //     {
+            //         model: List,
+            //         as: "lists",
+            //     }
+            // ]
         })
 
         if (!user) {
@@ -28,7 +33,8 @@ exports.login = async (req, res, next) => {
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                isAdministrator: user.isAdministrator
+                // isAdministrator: user.isAdministrator
+                // lists: user.lists,
             },
             token: jwt.sign(user.id, process.env.JWT_SECRET)
         })

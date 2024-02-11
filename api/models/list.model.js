@@ -14,7 +14,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        medias : {
+        likedMedias: {
+            type: DataTypes.JSON,
+            allowNull: false,
+            defaultValue: [],
+        },
+        dislikedMedias: { 
             type: DataTypes.JSON,
             allowNull: false,
             defaultValue: [],

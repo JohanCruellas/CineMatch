@@ -12,6 +12,7 @@
 <script>
 import { defineComponent } from 'vue';
 import mediaService from '../services/media.service';
+import listService from '../services/list.service';
 import MediaCard from '../components/MediaCard.vue';
 
 export default defineComponent({
@@ -22,20 +23,45 @@ export default defineComponent({
     data() {
         return {
             shownMedias: [],
+            userLists: [],
+            currentList: null,
+            page: 1,
         };
     },
     methods: {
         async like(media) {
-            console.log('like', media);
-            // let response = await mediaService.like(media.id);
-            // console.log(response);
-            this.shownMedias.splice(0, 1);
+            let response = await listService.update({
+                id: this.currentList.id,
+                likedMedias: [...this.currentList.likedMedias, media.id]
+            });
+
+            if (response.status === 200) {
+                this.shownMedias.splice(0, 1);
+                this.currentList = response.data;
+            } else {
+                this.$q.notify({
+                    message: `Erreur`,
+                    color: 'negative',
+                    icon: 'warning'
+                });
+            }
         },
         async dislike(media) {
-            console.log('dislike', media);
-            // let response = await mediaService.dislike(media.id);
-            // console.log(response);
-            this.shownMedias.splice(0, 1);
+            let response = await listService.update({
+                id: this.currentList.id,
+                dislikedMedias: [...this.currentList.dislikedMedias, media.id]
+            });
+
+            if (response.status === 200) {
+                this.shownMedias.splice(0, 1);
+                this.currentList = response.data;
+            } else {
+                this.$q.notify({
+                    message: `Erreur`,
+                    color: 'negative',
+                    icon: 'warning'
+                });
+            }
         },
         getBackgroundGradient(index) {
             const gradients = [
@@ -46,27 +72,44 @@ export default defineComponent({
             ]
             const gradientCount = gradients.length;
             return gradients[index % gradientCount];
-        }
+        },
+        async discoverMedias() {
+            let response = await mediaService.discover(this.page);
+
+            let filteredShownMedias = response.data.results.filter(media => {
+                return !this.currentList.likedMedias.includes(media.id) && !this.currentList.dislikedMedias.includes(media.id);
+            });
+
+            this.shownMedias = [...this.shownMedias, ...filteredShownMedias.map((media, index) => {
+                return {
+                    ...media,
+                    backgroundGradient: this.getBackgroundGradient(index),
+                };
+            })];
+        },
 
     },
     computed: {
-        // Your computed properties here
+    },
+    watch: {
+        shownMedias : {
+            handler: function (val) {
+                if (val.length < 3) {
+                    this.page++;
+                    this.discoverMedias();
+                }
+            },
+            deep: true
+        }
     },
     created() {
-        // Your created hook code here
     },
     async mounted() {
-        // Your mounted hook code here
-        let response = await mediaService.discover();
-        this.shownMedias = response.data.results.map((media, index) => {
-            return {
-                ...media,
-                backgroundGradient: this.getBackgroundGradient(index),
-            };
-        });
-        console.log(this.shownMedias);
+        let response = await listService.getAll(this.$store.currentUser.id);
+        this.userLists = response.data;
+        this.currentList = this.userLists.find(list => list.mainList === true);
+        this.discoverMedias();
     },
-    // Other lifecycle hooks and component options here
 });
 </script>
 
