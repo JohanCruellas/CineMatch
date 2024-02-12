@@ -9,7 +9,6 @@ class MediaService {
                 page: page,
                 genres : filters.genres?.map(genre => genre.value),
                 releaseYearMin : filters.releaseYearMin,
-                // releaseYearMax : filters.releaseYearMax,
                 rating : filters.rating,
             },
             paramsSerializer: params => {
@@ -22,6 +21,16 @@ class MediaService {
     async genres() {
         return await api.get(`/media/genres`, {
             headers: new AuthHeader().getHeader()
+        })
+    }
+
+    async search(searchStr, page) {
+        return await api.get(`/media/search`, {
+            params : {
+                searchStr : searchStr,
+                page : page
+            },
+            headers : new AuthHeader().getHeader()
         })
     }
 }

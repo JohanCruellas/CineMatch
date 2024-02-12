@@ -47,10 +47,6 @@ export default defineComponent({
             type: Object,
             required: true,
         },
-        mediaIndex: {
-            type: Number,
-            required: true,
-        },
     },
     data() {
         return {
@@ -84,7 +80,6 @@ export default defineComponent({
         hiddenGenres() {
             return this.media.genre_ids.slice(2);
         },
-
     },
     methods: {
         interactSetPosition(coordinates) {
@@ -188,8 +183,8 @@ export default defineComponent({
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-clamp: 5; // Adjust the number based on how many lines you want to show
-    -webkit-line-clamp: 12; // Adjust the number based on how many lines you want to show
+    line-clamp: 5;
+    -webkit-line-clamp: 12;
 }
 
 .transitionDelay {
@@ -199,7 +194,6 @@ export default defineComponent({
 @for $i from 0 through 3 {
     .card:nth-child(#{$i + 1}) {
         transform: translateY($i * -30px) scale(calc(1 + ($i / 20))) v-bind(transformString);
-        // background-image: nth($gradients, $i + 1);
     }
 }
 
@@ -209,8 +203,8 @@ export default defineComponent({
     }
 
     .overviewText {
-        line-clamp: 3; // Adjust the number based on how many lines you want to show
-        -webkit-line-clamp: 4; // Adjust the number based on how many lines you want to show
+        line-clamp: 3;
+        -webkit-line-clamp: 4;
     }
 
 

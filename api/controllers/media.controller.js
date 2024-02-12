@@ -55,8 +55,11 @@ exports.genres = async (req, res, next) => {
     }
 }
 
-exports.languages = async (req, res, next) => {
-    const url = 'https://api.themoviedb.org/3/configuration/languages';
+exports.search = async (req, res, next) => {
+    const searchStr = req.query.searchStr
+    const page = req.query.page
+
+    const url = `https://api.themoviedb.org/3/search/movie?include_adult=false&language=fr-FR&page=${page}&query=${searchStr}`;
     const options = {
         method: 'GET',
         headers: {

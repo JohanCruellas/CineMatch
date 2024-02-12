@@ -7,8 +7,8 @@
             <q-icon name="done" size="xl" class="indicatorIcon"></q-icon>
         </div>
         <div class="cardStack">
-            <MediaCard v-for="(media, mediaIndex) in shownMedias.slice(0, 4).reverse()" :key="media.id" :media="media"
-                :mediaIndex="mediaIndex" @swipe-left="(media) => dislike(media)" @swipe-right="(media) => like(media)"
+            <MediaCard v-for="media in shownMedias.slice(0, 4).reverse()" :key="media.id" :media="media"
+                @swipe-left="(media) => dislike(media)" @swipe-right="(media) => like(media)"
                 @move-left="showLeftIndicator = true" @move-right="showRightIndicator = true"
                 @reset-indicators="resetIndicators()">
             </MediaCard>

@@ -36,8 +36,8 @@
     <q-footer elevated class="text-white">
       <q-toolbar class="tabToolbar">
         <q-tabs v-model="tab" shrink>
-          <q-tab name="match"><q-icon name="favorite" size="sm"></q-icon></q-tab>
-          <q-tab name="search"><q-icon name="search" size="sm"></q-icon></q-tab>
+          <q-tab name="match"><q-icon name="favorite" size="sm" @click="$router.push({ name: 'Index' })"></q-icon></q-tab>
+          <q-tab name="search"><q-icon name="search" size="sm" @click="$router.push({name : 'Search'})"></q-icon></q-tab>
           <q-tab name="lists"><q-icon name="list_alt" size="sm"></q-icon></q-tab>
         </q-tabs>
       </q-toolbar>
