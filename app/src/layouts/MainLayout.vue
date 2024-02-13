@@ -19,7 +19,7 @@
             <q-item-label>Admin</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item class="logoutBtn" clickable v-ripple>
+        <q-item class="logoutBtn" clickable v-ripple @click="logout()">
           <q-item-section>
             <q-item-label>Se déconnecter <q-icon name="chevron_right"></q-icon></q-item-label>
           </q-item-section>
@@ -45,6 +45,7 @@
 
 <script>
 import { defineComponent } from 'vue'
+import { LocalStorage } from 'quasar'
 import FiltersModal from '../components/FiltersModal.vue'
 import mediaService from 'src/services/media.service'
 
@@ -64,6 +65,10 @@ export default defineComponent({
         parent: this,
       })
     },
+    logout() {
+      LocalStorage.clear()
+      this.$router.push({ name: 'Login' })
+    }
   },
   computed: {
     numberOfAppliedFilters() {
@@ -114,9 +119,5 @@ h1 {
 
 .logoutBtn {
   background-color: lightgrey;
-}
-
-.leftDrawer {
-  background-color: $bgDark;
 }
 </style>
