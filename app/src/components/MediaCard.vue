@@ -1,12 +1,12 @@
 <template>
     <q-card class="card" ref="draggableCard" :class="inInteraction === false ? 'transitionDelay' : ''">
         <q-card-section class="cardPoster">
-            <img :src="`https://image.tmdb.org/t/p/original/${media.backdrop_path}`" :alt="media.title"
-                class="mediaPoster" />
+            <img :src="media.backdrop_path ? `https://image.tmdb.org/t/p/w300/${media.backdrop_path}` : media.poster_path ? `https://image.tmdb.org/t/p/w300/${media.poster_path}` : ''"
+                :alt="media.title" class="mediaPoster" />
         </q-card-section>
         <q-card-section class="cardText">
-            <q-item>
-                <q-item-section>
+            <q-item class="itemText">
+                <q-item-section class="flex">
                     <q-item-label>{{ media.title }}</q-item-label>
                     <q-item-label caption>
                         <q-chip dense v-for="(genreId, genreIndex) in shownGenres" :key="genreIndex">
@@ -25,8 +25,9 @@
                     <q-item-label caption>{{ media.vote_average }} / 10</q-item-label>
                     <q-item-label class="overviewText">
                         {{ media.overview.length > 0 ? media.overview : 'Pas de synopsis' }}</q-item-label>
-                    <q-item-label class="flex justify-center q-mt-auto">
-                        <q-btn flat round icon="expand_more" />
+                    <q-space></q-space>
+                    <q-item-label class="flex justify-center">
+                        <q-btn flat round icon="expand_more" @click="openDetails()" />
                     </q-item-label>
                 </q-item-section>
             </q-item>
@@ -37,7 +38,7 @@
 <script>
 import { defineComponent } from 'vue';
 import interact from 'interactjs';
-import mediaService from '../services/media.service';
+import MediaDetails from './MediaDetails.vue';
 
 export default defineComponent({
     name: 'MediaCard',
@@ -90,6 +91,15 @@ export default defineComponent({
             this.inInteraction = false
             this.interactSetPosition({ x: 0, y: 0 })
         },
+        openDetails() {
+            this.$q.dialog({
+                component: MediaDetails,
+                parent: this,
+                componentProps: {
+                    media: this.media
+                }
+            })
+        }
     },
     watch: {
         cardOnRight(value) {
@@ -108,6 +118,8 @@ export default defineComponent({
         },
     },
     async mounted() {
+        console.log(this.media)
+
         const element = this.$refs.draggableCard.$el
         interact(element).draggable({
             // lockAxis: 'x',
@@ -166,6 +178,7 @@ export default defineComponent({
 
 .cardPoster>img {
     width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
@@ -178,13 +191,20 @@ export default defineComponent({
     max-height: 350px;
 }
 
+.itemText {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 .overviewText {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     line-clamp: 5;
-    -webkit-line-clamp: 12;
+    -webkit-line-clamp: 10;
+    margin-bottom: 10px;
 }
 
 .transitionDelay {
@@ -206,7 +226,12 @@ export default defineComponent({
         line-clamp: 3;
         -webkit-line-clamp: 4;
     }
+}
 
-
+@media screen and (max-height: 850px) {
+    .card {
+        align-self: flex-end;
+        margin-bottom: 25px;
+    }
 }
 </style>

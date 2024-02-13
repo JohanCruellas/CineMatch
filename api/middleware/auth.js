@@ -5,7 +5,6 @@ const { User } = db.models
 verifyToken = async (req, res, next) => {
     try {
         let token = req.headers['x-access-token']
-        let requestUser = req.headers['x-access-user'] ? JSON.parse(req.headers['x-access-user']) : null
         if (!token) {
             return res.status(401)
                 .send({
@@ -21,8 +20,10 @@ verifyToken = async (req, res, next) => {
                         message: 'Bad Token'
                     })
             }
-            req.userId = decoded
-            const user = await User.findOne({ where: { id: decoded }, attributes: ['id', 'username', 'email', 'isAdministrator'] })
+
+            const user = await User.findOne({ where: { id: decoded.id }, attributes: ['id', 'username', 'email', 'isAdministrator'] })
+            req.currentUser = user
+            
             if (!user) {
                 return res.status(404).send({
                     code: 'USER_NOT_FOUND',
@@ -30,15 +31,8 @@ verifyToken = async (req, res, next) => {
                 })
             }
 
-            if(user.isAdministrator !== requestUser.isAdministrator){
-                return res.status(403).send({
-                    code: 'FORBIDDEN',
-                    message: 'Forbidden'
-                })
-            }
             next()
         })
-
     } catch (error) {
         console.log(error)
         return res.status(500).send({

@@ -33,6 +33,12 @@ class MediaService {
             headers : new AuthHeader().getHeader()
         })
     }
+
+    async getJointMedias(targetUserId) {
+        return await api.get(`/media/joint/${targetUserId}`, {
+            headers : new AuthHeader().getHeader()
+        })
+    }
 }
 
 export default new MediaService()

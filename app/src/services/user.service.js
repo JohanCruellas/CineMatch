@@ -23,6 +23,15 @@ class UserService {
         return response
     }
 
+    async getAll(user) {
+        return await api.get(`/user`, {
+            params: {
+                username : user.username
+            },
+            headers: new AuthHeader().getHeader()
+        })
+    }
+
 }
 
 export default new UserService()

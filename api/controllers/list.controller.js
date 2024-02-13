@@ -1,10 +1,11 @@
+const { compareSync } = require("bcrypt")
 const db = require("../models/db.js")
 const { List } = db.models
 
 exports.create = async (req, res, next) => {
 }
 
-exports.findAll = async (req, res, next) => {
+exports.getAll = async (req, res, next) => {
     try {
         let lists = await List.findAll({
             where: {
@@ -31,8 +32,7 @@ exports.update = async (req, res, next) => {
             })
         }
 
-        let updatedList = await list.update(req.body.params)
-
+        let updatedList = await list.update(req.body)
         return res.status(200).json(updatedList)
     } catch (error) {
         return res.status(500).json({

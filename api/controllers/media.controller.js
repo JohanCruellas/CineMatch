@@ -77,14 +77,50 @@ exports.search = async (req, res, next) => {
     }
 }
 
-exports.findAll = async (req, res, next) => {
-}
+exports.getJointMedias = async (req, res, next) => {
+    try {
+        const targetUserId = req.params.targetUserId
+        const targetList = await List.findOne({
+            where: {
+                creator: targetUserId,
+                mainList: true
+            }
+        })
+        const callerList = await List.findOne({
+            where: {
+                creator: req.currentUser.id,
+                mainList: true
+            }
+        })
 
-exports.findOne = async (req, res, next) => {
-}
+        let jointListIds = targetList.likedMedias.filter(media => callerList.likedMedias.includes(media))
+        let jointList = []
 
-exports.update = async (req, res, next) => {
-}
+        for (id of jointListIds) {
+            const url = `https://api.themoviedb.org/3/movie/${id}?language=fr-FR`;
+            const options = {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`
+                }
+            };
+            try {
+                const response = await fetch(url, options);
+                const json = await response.json();
 
-exports.delete = async (req, res, next) => {
+                jointList.push(json)
+
+            } catch (err) {
+                console.error('error:' + err);
+            }
+        }
+
+        return res.status(200).json(jointList)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            message: "Internal server error."
+        })
+    }
 }

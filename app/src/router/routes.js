@@ -13,8 +13,9 @@ const routes = [
     path: '/home',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: "Index", component: () => import('pages/IndexPage.vue') },
-      { path: 'Search', name: 'Search', component: () => import('pages/SearchPage.vue') }
+      { path: 'Match', name: "Index", component: () => import('pages/IndexPage.vue') },
+      { path: 'Search', name: 'Search', component: () => import('pages/SearchPage.vue') },
+      { path: 'Social', name: 'Social', component: () => import('pages/SocialPage.vue') },
     ]
   },
 

@@ -5,7 +5,6 @@ const bodyParser = require("body-parser")
 const app = express()
 const initUtils = require("./utils/init.utils.js")
 
-
 console.log('DB SYNC.')
 
 app.use(cors())

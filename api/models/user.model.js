@@ -1,3 +1,5 @@
+const bcryptUtils = require('../utils/bcrypt.utils')
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     id: {
@@ -39,6 +41,9 @@ module.exports = (sequelize, DataTypes) => {
             title: "Votre liste",
             mainList: true,
           })
+        },
+        beforeCreate : async (user, options) => {
+          user.password = await bcryptUtils.encryptPassword(user.password)
         }
       }
     },

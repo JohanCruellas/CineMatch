@@ -12,11 +12,10 @@ class ListService {
     }
     async update(list) {
         return await api.put(`/list/${list.id}`, {
-            params: {
-                ...list
-            },
+            ...list
+        }, {
             headers: new AuthHeader().getHeader()
-        })
+        });
     }
 }
 

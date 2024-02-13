@@ -1,32 +1,30 @@
 <template>
   <q-layout view="lHh lpR lFf">
-    <q-header bordered class="bg-primary text-white">
+    <q-header bordered class="text-white header">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-        <q-toolbar-title>
+        <q-toolbar-title class="toolbarTitle">
           <h1>CineMatch</h1>
         </q-toolbar-title>
-        <q-space />
         <q-btn dense flat round icon="tune" v-if="$route.name === 'Index'" @click="openFiltersModal()">
           <q-badge color="red" floating>{{ numberOfAppliedFilters }}</q-badge>
         </q-btn>
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" elevated>
-      <q-list>
-        <q-item>
-          <q-avatar size="md">
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo.svg">
-          </q-avatar>
-        </q-item>
-        <q-item clickable v-ripple>
+    <q-drawer v-model="leftDrawerOpen" side="left" elevated>
+      <q-list class="leftDrawer">
+        <q-item clickable v-ripple v-if="$store.checkAdminRights()">
           <q-item-section>
-            <q-item-label>Profil</q-item-label>
+            <q-item-label>Admin</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item class="logoutBtn" clickable v-ripple>
+          <q-item-section>
+            <q-item-label>Se déconnecter <q-icon name="chevron_right"></q-icon></q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
-      <!-- drawer content -->
     </q-drawer>
 
     <q-page-container class="pageContainer">
@@ -35,10 +33,10 @@
 
     <q-footer elevated class="text-white">
       <q-toolbar class="tabToolbar">
-        <q-tabs v-model="tab" shrink>
-          <q-tab name="match"><q-icon name="favorite" size="sm" @click="$router.push({ name: 'Index' })"></q-icon></q-tab>
-          <q-tab name="search"><q-icon name="search" size="sm" @click="$router.push({name : 'Search'})"></q-icon></q-tab>
-          <q-tab name="lists"><q-icon name="list_alt" size="sm"></q-icon></q-tab>
+        <q-tabs v-model="$route.name" shrink>
+          <q-tab name="Index" @click="$router.push({ name: 'Index' })"><q-icon name="favorite" size="sm"></q-icon></q-tab>
+          <q-tab name="Search" @click="$router.push({ name: 'Search' })"><q-icon name="search" size="sm"></q-icon></q-tab>
+          <q-tab name="Social" @click="$router.push({ name: 'Social' })"><q-icon name="people" size="sm"></q-icon></q-tab>
         </q-tabs>
       </q-toolbar>
     </q-footer>
@@ -46,7 +44,6 @@
 </template>
 
 <script>
-import { ref } from 'vue'
 import { defineComponent } from 'vue'
 import FiltersModal from '../components/FiltersModal.vue'
 import mediaService from 'src/services/media.service'
@@ -55,7 +52,6 @@ export default defineComponent({
   data() {
     return {
       leftDrawerOpen: false,
-      tab: 'match'
     }
   },
   methods: {
@@ -67,7 +63,7 @@ export default defineComponent({
         component: FiltersModal,
         parent: this,
       })
-    }
+    },
   },
   computed: {
     numberOfAppliedFilters() {
@@ -79,7 +75,7 @@ export default defineComponent({
           return value !== null;
         }
       }).length;
-    }
+    },
   },
   async mounted() {
     const response = await mediaService.genres();
@@ -89,6 +85,11 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.toolbarTitle {
+  width: 100%;
+  text-align: center;
+}
+
 h1 {
   margin: 0;
   font-size: 1.5rem;
@@ -98,11 +99,24 @@ h1 {
 }
 
 .tabToolbar {
+  background-image: $gradientNegative;
   display: flex;
   justify-content: center;
 }
 
+.header {
+  background-image: $gradientNegative;
+}
+
 .pageContainer {
+  background-color: $bgDark;
+}
+
+.logoutBtn {
+  background-color: lightgrey;
+}
+
+.leftDrawer {
   background-color: $bgDark;
 }
 </style>

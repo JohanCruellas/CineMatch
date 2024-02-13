@@ -42,7 +42,6 @@ export default defineComponent({
         const { user, token } = response.data
         this.$store.currentUser = user
         LocalStorage.set('token', token)
-
         this.$router.push({ name: 'Index' })
 
       } else {
