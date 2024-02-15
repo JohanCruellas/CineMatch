@@ -163,7 +163,7 @@ export default defineComponent({
 
 .leftIndicator>.indicatorIcon {
     font-weight: 700;
-    background: $gradientNegative;
+    background: $gradientPrimary;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-left: 15px;

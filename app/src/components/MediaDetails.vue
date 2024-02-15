@@ -118,7 +118,7 @@ p {
     transition: all .8s ease-in-out;
     -webkit-background-clip: text;
     font-weight: 700;
-    background-image: $gradientNegative;
+    background-image: $gradientPrimary;
     ;
     -webkit-text-fill-color: transparent;
 }

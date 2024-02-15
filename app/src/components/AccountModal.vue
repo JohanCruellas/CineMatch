@@ -1,14 +1,16 @@
 <template>
-    <q-dialog v-model="showModal" persistent>
-        <q-card>
+    <q-dialog v-model="showModal">
+        <q-card class="accountCard">
             <q-card-section>
                 <q-form @submit="createAccount">
-                    <q-input v-model="username" label="Username" outlined required></q-input>
-                    <q-input v-model="email" label="Email" outlined required></q-input>
-                    <q-input v-model="password" label="Password" type="password" outlined required></q-input>
+                    <q-input v-model="username" label="Nom d'utilisateur" borderless required class="q-mb-sm"></q-input>
+                    <q-input v-model="email" label="Email" type="email" borderless required class="q-mb-sm"
+                        :rules="[validateEmail]"></q-input>
+                    <q-input v-model="password" label="Mot de passe" type="password" borderless required
+                        class="q-mb-sm"></q-input>
                     <q-card-actions align="right">
-                        <q-btn label="Cancel" color="primary" @click="closeModal" />
-                        <q-btn type="submit" label="Create Account" color="primary" />
+                        <q-btn flat label="Annuler" @click="closeModal" />
+                        <q-btn class="createBtn" flat type="submit" label="Créer un compte" />
                     </q-card-actions>
                 </q-form>
             </q-card-section>
@@ -36,6 +38,13 @@ export default {
         closeModal() {
             this.showModal = false;
         },
+        validateEmail(value) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                return "Entrez une adresse email valide";
+            }
+            return true;
+        },
         async createAccount() {
             let response = await userService.create(this.username, this.email, this.password);
             if (response.status == 200) {
@@ -56,3 +65,19 @@ export default {
     },
 };
 </script>
+
+<style lang="scss" scoped>
+@import '../css/mixins.scss';
+
+.accountCard {
+    @include gradient-border;
+    border-radius: 35px;
+}
+
+.createBtn {
+    color: white;
+    padding: 0px 20px;
+    background-image: $gradientPrimary;
+    border-radius: 35px;
+}
+</style>

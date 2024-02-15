@@ -118,11 +118,8 @@ export default defineComponent({
         },
     },
     async mounted() {
-        console.log(this.media)
-
         const element = this.$refs.draggableCard.$el
         interact(element).draggable({
-            // lockAxis: 'x',
             onmove: event => {
                 this.inInteraction = true
                 const x = this.interactionPosition.x + event.dx
@@ -147,13 +144,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-// $gradients: (
-//     linear-gradient(45deg, #a6ff00, #28bbff),
-//     linear-gradient(45deg, #ffbb00, #a6ff00),
-//     linear-gradient(45deg, #ff2478, #ffbb00),
-//     linear-gradient(45deg, #28bbff, #ff2478),
-// );
-
 .card {
     display: flex;
     flex-direction: column;
@@ -172,7 +162,7 @@ export default defineComponent({
 .cardPoster {
     padding: 0;
     height: 150px;
-    margin: 10px 10px 0px 10px;
+    margin: 5px 5px 0px 5px;
     overflow: hidden;
 }
 
@@ -186,7 +176,7 @@ export default defineComponent({
     flex: 1;
     background-color: white;
     box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
-    margin: 0px 10px 10px 10px;
+    margin: 0px 5px 5px 5px;
     padding-bottom: 10px;
     max-height: 350px;
 }

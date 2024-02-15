@@ -79,6 +79,8 @@ export default defineComponent({
 </script>
   
 <style lang="scss" scoped>
+@import "../css/mixins.scss";
+
 .resultWrapper {
     width: 100%;
     height: 600px;
@@ -88,25 +90,13 @@ export default defineComponent({
 }
 
 .searchResultsCard {
+    @include gradient-border;
     width: 80%;
     height: 90%;
     background-color: white;
-    background: linear-gradient(white, white) padding-box, $gradientNegative border-box;
-    border: 4px solid transparent;
     border-radius: 35px;
     overflow: scroll;
     margin-bottom: 10px;
-}
-
-.searchInput {
-    margin: 15px 0px;
-    height: 50px;
-    border-radius: 35px;
-    padding: 0px 25px;
-    background: linear-gradient(white, white) padding-box, $gradientNegative border-box;
-    border-radius: 50em;
-    border: 4px solid transparent;
-    width: 80%;
 }
 
 .searchList {

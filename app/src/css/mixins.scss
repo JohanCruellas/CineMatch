@@ -1,0 +1,4 @@
+@mixin gradient-border {
+    background: linear-gradient(white, white) padding-box, $gradientPrimary border-box;
+    border: 4px solid transparent;
+}

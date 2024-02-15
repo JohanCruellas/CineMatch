@@ -21,7 +21,7 @@ verifyToken = async (req, res, next) => {
                     })
             }
 
-            const user = await User.findOne({ where: { id: decoded.id }, attributes: ['id', 'username', 'email', 'isAdministrator'] })
+            const user = await User.findOne({ where: { id: decoded.id }, attributes: ['id', 'username', 'email'] })
             req.currentUser = user
             
             if (!user) {

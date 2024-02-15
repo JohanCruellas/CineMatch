@@ -73,7 +73,7 @@ export default defineComponent({
 }
 
 .mediaItem:hover {
-    background-image: $gradientNegative;
+    background-image: $gradientPrimary;
 }
 
 .mediaItem>li {
@@ -99,7 +99,7 @@ export default defineComponent({
 
 .mediaItem::after {
     content: '';
-    background-image: $gradientNegative;
+    background-image: $gradientPrimary;
     position: absolute;
     width: 50%;
     height: 2px;

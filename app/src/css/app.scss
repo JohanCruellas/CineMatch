@@ -1,1 +1,12 @@
 // app global css in SCSS form
+@import './mixins.scss';
+
+.searchInput {
+    @include gradient-border;
+    border-radius: 50px;
+    margin: 15px 0px;
+    height: 50px;
+    padding: 0px 25px;
+    width: 80%;
+    max-width: 500px;
+}

@@ -22,7 +22,7 @@
             </q-card>
         </div>
         <q-dialog v-model="communModal">
-            <q-card>
+            <q-card class="jointCard">
                 <q-card-section>
                     <h6>Films en commun avec {{ targetUser.username }}</h6>
                 </q-card-section>
@@ -100,6 +100,8 @@ export default defineComponent({
 </script>
   
 <style lang="scss" scoped>
+@import "../css/mixins.scss";
+
 .resultWrapper {
     width: 100%;
     height: 600px;
@@ -112,24 +114,12 @@ export default defineComponent({
     width: 80%;
     height: 90%;
     background-color: white;
-    background: linear-gradient(white, white) padding-box, $gradientNegative border-box;
+    background: linear-gradient(white, white) padding-box, $gradientPrimary border-box;
     border: 4px solid transparent;
     border-radius: 35px;
     overflow: scroll;
     margin-bottom: 10px;
 }
-
-.searchInput {
-    margin: 15px 0px;
-    height: 50px;
-    border-radius: 35px;
-    padding: 0px 25px;
-    background: linear-gradient(white, white) padding-box, $gradientNegative border-box;
-    border-radius: 50em;
-    border: 4px solid transparent;
-    width: 80%;
-}
-
 .searchList {
     width: 100%;
     list-style-type: none;
@@ -172,7 +162,7 @@ export default defineComponent({
 
 .searchItem::after {
     content: '';
-    background-image: $gradientNegative;
+    background-image: $gradientPrimary;
     position: absolute;
     width: 50%;
     height: 2px;
@@ -181,12 +171,25 @@ export default defineComponent({
 }
 
 .joinBtn {
-    border: 2px solid $bgDark;
-    color: $bgDark;
+    border: 2px solid white;
+    color: white;
     border-radius: 50%;
     padding: 5px;
     height: 30px;
     width: 30px;
+}
+
+h6 {
+    text-align: center;
+    margin: 0px;
+    padding: 0px 20px;
+}
+
+.jointCard {
+    @include gradient-border;
+    max-width: 700px;
+    border-radius: 35px;
+    padding: 0px;
 }
 </style>
   

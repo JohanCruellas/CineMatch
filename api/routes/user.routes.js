@@ -5,10 +5,11 @@ module.exports = app => {
     var router = require("express").Router();
 
     router.post("/login", controller.login);
-    router.post("/logout", controller.logout);
     router.post("/", controller.create);
 
     router.get("/", [auth.verifyToken], controller.getAll);
+
+    router.delete("/:id", [auth.verifyToken], controller.delete);
 
     app.use('/user', router);
 };

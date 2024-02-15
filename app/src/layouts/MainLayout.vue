@@ -12,9 +12,9 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" side="left" elevated>
+    <q-drawer v-model="leftDrawerOpen" side="left" elevated class="drawer">
       <q-list class="leftDrawer">
-        <q-item clickable v-ripple v-if="$store.checkAdminRights()">
+        <q-item clickable v-ripple v-if="$store.checkAdminRights()" @click="$router.push({name : 'Admin'})">
           <q-item-section>
             <q-item-label>Admin</q-item-label>
           </q-item-section>
@@ -90,6 +90,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+:deep(.drawer) {
+  background-color: $bgLight;
+}
+
 .toolbarTitle {
   width: 100%;
   text-align: center;
@@ -104,13 +108,13 @@ h1 {
 }
 
 .tabToolbar {
-  background-image: $gradientNegative;
+  background-image: $gradientPrimary;
   display: flex;
   justify-content: center;
 }
 
 .header {
-  background-image: $gradientNegative;
+  background-image: $gradientPrimary;
 }
 
 .pageContainer {
@@ -118,6 +122,7 @@ h1 {
 }
 
 .logoutBtn {
-  background-color: lightgrey;
+  background-color: #fa458b;;
+  font-weight: 500;
 }
 </style>

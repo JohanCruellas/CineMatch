@@ -25,10 +25,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    isAdministrator: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
   },
     {
       timestamps: true,

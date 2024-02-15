@@ -1,6 +1,6 @@
 <template>
-    <q-dialog full-width>
-        <q-card>
+    <q-dialog>
+        <q-card class="filterCard">
             <q-card-section>
                 <q-item>
                     <q-item-section>
@@ -65,3 +65,13 @@ export default {
     }
 };
 </script>
+
+<style lang="scss" scoped>
+@import "../css/mixins.scss";
+.filterCard {
+    @include gradient-border;
+    border-radius: 35px;
+    width: 80%;
+    max-width: 500px;
+}
+</style>

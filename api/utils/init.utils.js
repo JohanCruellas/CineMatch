@@ -1,19 +1,36 @@
 function initUtils() {
     return {
         async initialize(sequelize) {
-            const { User } = sequelize.models
+            const { User, Role } = sequelize.models
+
+            await Role.findOrCreate({
+                where: { name: 'admin' }
+            })
+            
             let foundAdmin = await User.findOne({
-                where: {
-                    isAdministrator: true
+                include: {
+                    model: Role,
+                    as: 'roles',
+                    where: {
+                        name: 'admin'
+                    }
                 }
             })
+
             if (!foundAdmin) {
                 let admin = await User.create({
                     username: "admin",
                     email: "admin@localhost.com",
                     password: "admin",
-                    isAdministrator: true
                 })
+
+                let role = await Role.findOne({
+                    where: {
+                        name: 'admin'
+                    }
+                })
+
+                await admin.addRole(role)
             }
         }
     };

@@ -10,12 +10,13 @@ const routes = [
     component: () => import('pages/LoginPage.vue'),
   },
   {
-    path: '/home',
+    path: '/app',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: 'Match', name: "Index", component: () => import('pages/IndexPage.vue') },
       { path: 'Search', name: 'Search', component: () => import('pages/SearchPage.vue') },
       { path: 'Social', name: 'Social', component: () => import('pages/SocialPage.vue') },
+      {path : 'Admin', name: 'Admin', component: () => import('pages/AdminPage.vue')},
     ]
   },
 

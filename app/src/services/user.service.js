@@ -23,10 +23,16 @@ class UserService {
         return response
     }
 
-    async getAll(user) {
+    async delete(id) {
+        return await api.delete(`/user/${id}`, {
+            headers: new AuthHeader().getHeader()
+        })
+    }
+
+    async getAll(userFilters) {
         return await api.get(`/user`, {
             params: {
-                username : user.username
+                username: userFilters?.username
             },
             headers: new AuthHeader().getHeader()
         })

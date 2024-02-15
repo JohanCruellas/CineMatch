@@ -1,5 +1,5 @@
 const db = require("../models/db.js")
-const { User, List } = db.models
+const { User, Role } = db.models
 const jwt = require('jsonwebtoken')
 const { Op } = require("sequelize")
 const bcryptUtils = require("../utils/bcrypt.utils.js")
@@ -12,6 +12,10 @@ exports.login = async (req, res, next) => {
             where: {
                 username: username
             },
+            include: {
+                model: Role,
+                as: 'roles'
+            }
         })
 
         if (!user) {
@@ -30,25 +34,12 @@ exports.login = async (req, res, next) => {
             id: user.id,
             username: user.username,
             email: user.email,
-            isAdministrator: user.isAdministrator
+            isAdministrator: user.roles.some(role => role.name === 'admin')
         }
 
         return res.status(200).json({
             user: tokenPayload,
             token: jwt.sign(tokenPayload, process.env.JWT_SECRET)
-        })
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            message: "Internal server error."
-        })
-    }
-}
-
-exports.logout = async (req, res, next) => {
-    try {
-        return res.status(200).json({
-            message: "Logged out."
         })
     } catch (error) {
         console.log(error)
@@ -84,7 +75,6 @@ exports.create = async (req, res, next) => {
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                isAdministrator: user.isAdministrator
             }
         })
     } catch (error) {
@@ -102,10 +92,35 @@ exports.getAll = async (req, res, next) => {
             where: {
                 username: username ? { [Op.like]: `%${username}%` } : { [Op.ne]: null }
             },
-            attributes: ['id', 'username']
+            include: {
+                model: Role,
+                as: 'roles'
+            },
+            attributes: ['id', 'username', 'email']
         })
         return res.status(200).json({
             users: users
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            message: "Internal server error."
+        })
+    }
+}
+
+exports.delete = async (req, res, next) => {
+    try {
+        const { id } = req.params
+        let user = await User.findByPk(id)
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found."
+            })
+        }
+        await user.destroy()
+        return res.status(200).json({
+            message: "User deleted."
         })
     } catch (error) {
         console.log(error)
