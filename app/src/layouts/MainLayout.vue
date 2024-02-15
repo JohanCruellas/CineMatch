@@ -14,7 +14,7 @@
 
     <q-drawer v-model="leftDrawerOpen" side="left" elevated class="drawer">
       <q-list class="leftDrawer">
-        <q-item clickable v-ripple v-if="$store.checkAdminRights()" @click="$router.push({name : 'Admin'})">
+        <q-item class="paramLink" clickable v-ripple v-if="$store.checkAdminRights()" @click="$router.push({name : 'Admin'})">
           <q-item-section>
             <q-item-label>Admin</q-item-label>
           </q-item-section>
@@ -123,6 +123,13 @@ h1 {
 
 .logoutBtn {
   background-color: #fa458b;;
+  font-weight: 500;
+}
+
+.paramLink {
+  background-color: #696969;
+  color : white;
+  border-bottom: 2px solid $bgDark;
   font-weight: 500;
 }
 </style>
