@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const db = require('../models/db')
-const { User } = db.models
+const { User, Role } = db.models
 
 verifyToken = async (req, res, next) => {
     try {
@@ -21,9 +21,16 @@ verifyToken = async (req, res, next) => {
                     })
             }
 
-            const user = await User.findOne({ where: { id: decoded.id }, attributes: ['id', 'username', 'email'] })
+            const user = await User.findOne({
+                where: { id: decoded.id },
+                include: {
+                    model: Role,
+                    as: 'roles'
+                },
+                attributes: ['id', 'username', 'email']
+            })
             req.currentUser = user
-            
+
             if (!user) {
                 return res.status(404).send({
                     code: 'USER_NOT_FOUND',
@@ -42,8 +49,20 @@ verifyToken = async (req, res, next) => {
     }
 }
 
+adminAccess = async (req, res, next) => {
+    if (req.currentUser.roles.some(role => role.name === 'admin')) {
+        next()
+    } else {
+        return res.status(403).send({
+            code: 'FORBIDDEN',
+            message: 'Forbidden'
+        })
+    }
+}
+
 const auth = {
     verifyToken: verifyToken,
+    adminAccess: adminAccess
 }
 
 module.exports = auth

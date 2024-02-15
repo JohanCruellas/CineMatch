@@ -9,7 +9,7 @@ module.exports = app => {
 
     router.get("/", [auth.verifyToken], controller.getAll);
 
-    router.delete("/:id", [auth.verifyToken], controller.delete);
+    router.delete("/:id", [auth.verifyToken, auth.adminAccess], controller.delete);
 
     app.use('/user', router);
 };
