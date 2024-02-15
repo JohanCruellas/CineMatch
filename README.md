@@ -1,4 +1,5 @@
 Pour démarrer le backend en dev : npm run dev
+
 Pour démarrer le front-end en dev : quasar dev
 
 Contenu du .env front :
