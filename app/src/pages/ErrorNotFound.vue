@@ -1,21 +1,21 @@
 <template>
-  <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
+  <div class="page fullscreen text-white text-center q-pa-md flex flex-center">
     <div>
-      <div style="font-size: 30vh">
+      <h1 style="font-size: 30vh">
         404
-      </div>
+      </h1>
 
-      <div class="text-h2" style="opacity:.4">
-        Oops. Nothing here...
-      </div>
+      <section class="text-h2" style="opacity:.4">
+        Il n'y a rien ici
+      </section>
 
       <q-btn
         class="q-mt-xl"
-        color="white"
-        text-color="blue"
+        color="secondary"
+        text-color="white"
         unelevated
         to="/"
-        label="Go Home"
+        label="Retour à l'accueil"
         no-caps
       />
     </div>
@@ -29,3 +29,10 @@ export default defineComponent({
   name: 'ErrorNotFound'
 })
 </script>
+
+<style lang="scss" scoped>
+  .page {
+    background-color: $primary;
+  }
+</style>
+```
