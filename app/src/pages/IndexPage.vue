@@ -106,7 +106,6 @@ export default defineComponent({
         shownMedias: {
             handler: function (val) {
                 if (val.length < 4) {
-                    console.log('load more')
                     this.page++;
                     this.discoverMedias();
                 }
